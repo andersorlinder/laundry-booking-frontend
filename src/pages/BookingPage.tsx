@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import type React from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import TimeSlotTable from "../components/TimeSlotTable";
+import LaundryRulesAccordion from "../components/LaundryRulesAccordion";
 
 interface TimeSlot {
   id: string;
@@ -15,8 +17,6 @@ interface TimeSlot {
 const BookingPage: React.FC = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
-  const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
-  const [bookingConfirmed, setBookingConfirmed] = useState(false);
 
   // Generate 28 days of time slots starting from today
   const generateTimeSlots = (): TimeSlot[] => {
@@ -60,8 +60,6 @@ const BookingPage: React.FC = () => {
     if (slot && slot.bookedBy === user?.email) {
       const updatedSlots = timeSlots.map((s) => (s.id === slotId ? { ...s, available: true, bookedBy: undefined } : s));
       setTimeSlots(updatedSlots);
-      setSelectedSlot(null);
-      setBookingConfirmed(false);
       return;
     }
 
@@ -72,13 +70,10 @@ const BookingPage: React.FC = () => {
 
     // Book the slot if available
     if (slot && slot.available) {
-      setSelectedSlot(slotId);
       const updatedSlots = timeSlots.map((s) =>
         s.id === slotId ? { ...s, available: false, bookedBy: user?.email } : s
       );
       setTimeSlots(updatedSlots);
-      setBookingConfirmed(true);
-      setTimeout(() => setBookingConfirmed(false), 3000);
     }
   };
 
@@ -117,13 +112,9 @@ const BookingPage: React.FC = () => {
         </button>
       </header>
 
-      {bookingConfirmed && (
-        <div className="bg-green-100 text-green-800 px-4 md:px-6 py-3 md:py-4 mx-4 md:mx-8 mt-5 rounded-md border-l-4 border-green-600 animate-pulse text-sm md:text-base">
-          ✓ Bokning bekräftad! Din tvätttid är reserverad.
-        </div>
-      )}
-
       <div className="px-4 md:px-8 py-4 md:py-8 max-w-7xl mx-auto w-full">
+        <LaundryRulesAccordion />
+
         <h2 className="text-lg md:text-2xl font-semibold text-gray-800 mb-4 md:mb-8">Tillgängliga tider</h2>
 
         <div className="bg-white rounded-lg p-3 md:p-4 shadow-md flex flex-col gap-2 md:gap-3 mb-4 md:mb-6">
