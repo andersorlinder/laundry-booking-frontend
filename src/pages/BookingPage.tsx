@@ -109,6 +109,7 @@ const BookingPage: React.FC = () => {
           <p className="text-xs md:text-sm opacity-90 truncate">Välkommen, {user?.email}</p>
         </div>
         <button
+          type="button"
           onClick={handleLogout}
           className="px-3 md:px-5 py-2 bg-white bg-opacity-40 text-indigo-700 border-2 border-white rounded-md text-xs md:text-sm font-semibold transition-all hover:bg-opacity-60 whitespace-nowrap"
         >

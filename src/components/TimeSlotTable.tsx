@@ -72,6 +72,7 @@ const TimeSlotTable: React.FC<TimeSlotTableProps> = ({
                   return (
                     <td key={slot.id} className="px-1 md:px-6 py-2 md:py-4 border border-gray-300">
                       <button
+                        type="button"
                         onClick={() => handleBookSlot(slot.id)}
                         disabled={isDisabled}
                         title={
