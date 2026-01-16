@@ -3,7 +3,8 @@ import { createContext, type ReactNode, useContext, useState } from "react";
 
 interface User {
   email: string;
-  id: string;
+  id: string | number;
+  token?: string;
 }
 
 interface AuthContextType {
@@ -19,25 +20,41 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [user, setUser] = useState<User | null>(null);
 
   const login = async (email: string, pin: string) => {
-    // Simulate API call with mock data
-    // In production, this would call your backend
-    const mockUsers = [
-      { email: "resident1@apartment.com", pin: "1234", id: "1" },
-      { email: "resident2@apartment.com", pin: "5678", id: "2" },
-      { email: "resident3@apartment.com", pin: "9012", id: "3" },
-    ];
+    try {
+      const response = await fetch("http://localhost:5272/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, pin }),
+      });
 
-    const foundUser = mockUsers.find((u) => u.email === email && u.pin === pin);
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || "Login failed. Please try again.");
+      }
 
-    if (foundUser) {
-      setUser({ email: foundUser.email, id: foundUser.id });
-    } else {
-      throw new Error("Invalid email or PIN");
+      const data: { userId: number; email: string; token: string } = await response.json();
+
+      setUser({
+        email: data.email,
+        id: data.userId,
+        token: data.token,
+      });
+
+      // Store token in localStorage for authenticated requests
+      localStorage.setItem("authToken", data.token);
+    } catch (error) {
+      if (error instanceof TypeError && error.message.includes("fetch")) {
+        throw new Error("Cannot connect to server. Please check your connection.");
+      }
+      throw error;
     }
   };
 
   const logout = () => {
     setUser(null);
+    localStorage.removeItem("authToken");
   };
 
   return (

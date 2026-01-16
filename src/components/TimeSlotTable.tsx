@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 
 interface TimeSlot {
   id: string;
@@ -12,7 +12,7 @@ interface TimeSlot {
 interface TimeSlotTableProps {
   sortedDates: string[];
   groupedSlots: Record<string, TimeSlot[]>;
-  user: { email: string; id: string } | null;
+  user: { email: string; id: string | number; token?: string } | null;
   userBooking: TimeSlot | undefined;
   handleBookSlot: (slotId: string) => void;
 }
