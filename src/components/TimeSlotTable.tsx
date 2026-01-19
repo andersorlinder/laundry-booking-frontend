@@ -7,12 +7,13 @@ interface TimeSlot {
   time: string;
   available: boolean;
   bookedBy?: string;
+  apartmentNumber?: string;
 }
 
 interface TimeSlotTableProps {
   sortedDates: string[];
   groupedSlots: Record<string, TimeSlot[]>;
-  user: { email: string; id: string | number; token?: string } | null;
+  user: { email: string; id: string | number; token?: string; apartmentNumber: string } | null;
   userBooking: TimeSlot | undefined;
   handleBookSlot: (slotId: string) => void;
 }
@@ -79,7 +80,7 @@ const TimeSlotTable: React.FC<TimeSlotTableProps> = ({
                           isUserBooking
                             ? "Klicka för att avboka"
                             : isOtherBooking
-                              ? `Bokad av ${slot.bookedBy}`
+                              ? `Bokad av lägenhet ${slot.apartmentNumber}`
                               : userBooking
                                 ? "Du har redan en bokning. Avboka den för att boka en annan."
                                 : "Klicka för att boka"
@@ -94,7 +95,7 @@ const TimeSlotTable: React.FC<TimeSlotTableProps> = ({
                                 : "border-2 border-green-400 bg-green-50 text-green-800 hover:border-indigo-500 hover:bg-blue-50 cursor-pointer"
                         }`}
                       >
-                        {isUserBooking ? "✓ Din bokning" : isOtherBooking ? "Bokad" : "Ledig"}
+                        {isUserBooking ? "✓ Din bokning" : isOtherBooking ? `Lgh ${slot.apartmentNumber}` : "Ledig"}
                       </button>
                     </td>
                   );

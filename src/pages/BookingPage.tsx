@@ -20,6 +20,7 @@ interface TimeSlot {
   available: boolean;
   bookedBy?: string;
   bookingId?: number; // The actual booking ID from the database
+  apartmentNumber?: string;
 }
 
 // Generate 28 days of time slots starting from today
@@ -82,6 +83,7 @@ const BookingPage: React.FC = () => {
               available: false,
               bookedBy: isUserBooking ? user?.email : "other_user",
               bookingId: bookedSlot?.id,
+              apartmentNumber: bookedSlot?.apartmentNumber,
             };
           }
 
@@ -95,7 +97,7 @@ const BookingPage: React.FC = () => {
     };
 
     fetchAndUpdateBookedSlots();
-  }, []);
+  }, [user?.email, user?.id]);
 
   // Find the user's current booking
   const userBooking = timeSlots.find((s) => s.bookedBy === user?.email);
@@ -113,7 +115,9 @@ const BookingPage: React.FC = () => {
 
         // Update the UI
         const updatedSlots = timeSlots.map((s) =>
-          s.id === slotId ? { ...s, available: true, bookedBy: undefined, bookingId: undefined } : s
+          s.id === slotId
+            ? { ...s, available: true, bookedBy: undefined, bookingId: undefined, apartmentNumber: undefined }
+            : s
         );
         setTimeSlots(updatedSlots);
       } catch (error) {
@@ -140,7 +144,15 @@ const BookingPage: React.FC = () => {
 
         // Update the UI with the booking ID from the response
         const updatedSlots = timeSlots.map((s) =>
-          s.id === slotId ? { ...s, available: false, bookedBy: user?.email, bookingId: bookingResponse.id } : s
+          s.id === slotId
+            ? {
+                ...s,
+                available: false,
+                bookedBy: user?.email,
+                bookingId: bookingResponse.id,
+                apartmentNumber: user?.apartmentNumber,
+              }
+            : s
         );
         setTimeSlots(updatedSlots);
       } catch (error) {
@@ -174,7 +186,7 @@ const BookingPage: React.FC = () => {
       <header className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-4 md:px-8 py-3 md:py-5 shadow-md flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
         <div className="header-content">
           <h1 className="text-xl md:text-3xl font-semibold mb-1">Tvättidsbooking</h1>
-          <p className="text-xs md:text-sm opacity-90 truncate">Välkommen, {user?.email}</p>
+          <p className="text-xs md:text-sm opacity-90 truncate">Välkommen, lägenhet {user?.apartmentNumber}</p>
         </div>
         <button
           type="button"

@@ -4,6 +4,7 @@ export interface BookedSlot {
   bookingDate: string;
   timeSlotNumber: number;
   createdAt: string;
+  apartmentNumber: string;
 }
 
 export interface BookingsByDate {
@@ -70,6 +71,7 @@ export interface BookingResponse {
   bookingDate: string;
   timeSlotNumber: number;
   createdAt: string;
+  apartmentNumber: string;
 }
 
 export const bookTimeSlot = async (bookingDate: string, timeSlotNumber: number): Promise<BookingResponse> => {

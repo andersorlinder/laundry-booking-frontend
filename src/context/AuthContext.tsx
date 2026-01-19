@@ -5,6 +5,7 @@ interface User {
   email: string;
   id: string | number;
   token?: string;
+  apartmentNumber: string;
 }
 
 interface AuthContextType {
@@ -34,12 +35,13 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         throw new Error(errorData.message || "Login failed. Please try again.");
       }
 
-      const data: { userId: number; email: string; token: string } = await response.json();
+      const data: { userId: number; email: string; token: string; apartmentNumber: string } = await response.json();
 
       setUser({
         email: data.email,
         id: data.userId,
         token: data.token,
+        apartmentNumber: data.apartmentNumber,
       });
 
       // Store token in localStorage for authenticated requests
