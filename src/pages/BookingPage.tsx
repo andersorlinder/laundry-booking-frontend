@@ -99,14 +99,48 @@ const BookingPage: React.FC = () => {
     fetchAndUpdateBookedSlots();
   }, [user?.apartmentNumber, user?.id]);
 
-  // Find the user's current booking
-  const userBooking = timeSlots.find((s) => s.bookedBy === user?.apartmentNumber);
+  // Find all the user's bookings
+  const userBookings = timeSlots.filter((s) => s.bookedBy === user?.apartmentNumber);
+  
+  // Find the most relevant booking (prioritize future bookings)
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  
+  const futureBookings = userBookings.filter((booking) => {
+    const bookingDate = new Date(booking.date);
+    bookingDate.setHours(0, 0, 0, 0);
+    return bookingDate > today;
+  });
+  
+  const userBooking = futureBookings.length > 0 ? futureBookings[0] : userBookings[0];
+  const hasFutureBooking = futureBookings.length > 0;
 
   const handleBookSlot = async (slotId: string) => {
     const slot = timeSlots.find((s) => s.id === slotId);
 
     // If clicking on their own booking, unbook it
     if (slot && slot.bookedBy === user?.apartmentNumber) {
+      // Check if the time slot has already started
+      const slotDateTime = new Date(slot.date);
+      const times = ["07:00 - 12:00", "12:00 - 17:00", "17:00 - 22:00"];
+      const timeSlotIndex = times.indexOf(slot.time);
+
+      // Set the start time based on the slot
+      if (timeSlotIndex === 0) {
+        slotDateTime.setHours(7, 0, 0, 0); // 07:00
+      } else if (timeSlotIndex === 1) {
+        slotDateTime.setHours(12, 0, 0, 0); // 12:00
+      } else if (timeSlotIndex === 2) {
+        slotDateTime.setHours(17, 0, 0, 0); // 17:00
+      }
+
+      const now = new Date();
+
+      if (now >= slotDateTime) {
+        alert("Du kan inte avboka en tid som redan har börjat.");
+        return;
+      }
+
       try {
         if (!slot.bookingId) {
           throw new Error("Booking ID not found");
@@ -127,9 +161,26 @@ const BookingPage: React.FC = () => {
       return;
     }
 
-    // If they already have a booking, don't allow a new one
-    if (userBooking) {
-      return;
+    // If they already have a booking, check if any are in the future
+    if (userBookings.length > 0) {
+      // If user has a future booking, don't allow another one
+      if (hasFutureBooking) {
+        alert("Du har redan en framtida bokning. Avboka den först för att boka en ny tid.");
+        return;
+      }
+      
+      // User has booking(s) from today or earlier, allow booking from tomorrow onwards
+      const slotDate = new Date(slot?.date || "");
+      slotDate.setHours(0, 0, 0, 0);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const tomorrow = new Date(today);
+      tomorrow.setDate(tomorrow.getDate() + 1);
+
+      if (slotDate < tomorrow) {
+        alert("Du har redan en bokning idag eller tidigare. Du kan endast boka från och med imorgon.");
+        return;
+      }
     }
 
     // Book the slot if available

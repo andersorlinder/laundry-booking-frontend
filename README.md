@@ -63,7 +63,7 @@ The application will be available at `http://localhost:5173`
 
 The application connects to the laundry booking API. Configure the API URL in your `.env` file:
 ```bash
-VITE_API_URL=http://laundry-booking-api.onrender.com/api
+VITE_API_URL=https://laundry-booking-api.onrender.com/api
 ```
 
 ### Authentication

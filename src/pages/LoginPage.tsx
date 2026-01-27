@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import type React from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
@@ -29,7 +30,7 @@ const LoginPage: React.FC = () => {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-500 to-purple-600 font-sans">
       <div className="bg-white p-10 rounded-lg shadow-lg w-full max-w-md">
         <h1 className="text-3xl font-semibold text-gray-800 text-center mb-3">Tvättbokningssystem</h1>
-        <p className="text-center text-gray-600 text-sm mb-8">Hyreshusvälvningar</p>
+        <p className="text-center text-gray-600 text-sm mb-8">Brf Herrljungahus nr 2</p>
 
         <form onSubmit={handleSubmit}>
           <div className="mb-5">
@@ -79,15 +80,6 @@ const LoginPage: React.FC = () => {
             {isLoading ? "Loggar in..." : "Logga in"}
           </button>
         </form>
-
-        <div className="mt-8 pt-5 border-t border-gray-300 bg-gray-50 p-4 rounded-md text-xs">
-          <p className="text-gray-700 font-semibold mb-2">Demoinloggningar:</p>
-          <ul className="pl-5 text-gray-700 space-y-1">
-            <li className="font-mono">Lägenhet: A10231, PIN: 1234</li>
-            <li className="font-mono">Lägenhet: A10232, PIN: 5678</li>
-            <li className="font-mono">Lägenhet: A10233, PIN: 9012</li>
-          </ul>
-        </div>
       </div>
     </div>
   );
