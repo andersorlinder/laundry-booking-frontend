@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 const LoginPage: React.FC = () => {
-  const [email, setEmail] = useState("");
+  const [apartmentNumber, setApartmentNumber] = useState("");
   const [pin, setPin] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -16,7 +16,7 @@ const LoginPage: React.FC = () => {
     setIsLoading(true);
 
     try {
-      await login(email, pin);
+      await login(apartmentNumber, pin);
       navigate("/booking");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Login failed. Please try again.");
@@ -33,15 +33,15 @@ const LoginPage: React.FC = () => {
 
         <form onSubmit={handleSubmit}>
           <div className="mb-5">
-            <label htmlFor="email" className="block text-gray-800 font-medium text-sm mb-2">
-              E-postadress
+            <label htmlFor="apartmentNumber" className="block text-gray-800 font-medium text-sm mb-2">
+              Lägenhetsnummer
             </label>
             <input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="din.epost@hyreshus.se"
+              id="apartmentNumber"
+              type="text"
+              value={apartmentNumber}
+              onChange={(e) => setApartmentNumber(e.target.value)}
+              placeholder="A10231"
               required
               disabled={isLoading}
               className="w-full px-3 py-3 border-2 border-gray-300 rounded-md text-sm transition-colors focus:outline-none focus:border-indigo-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
@@ -83,9 +83,9 @@ const LoginPage: React.FC = () => {
         <div className="mt-8 pt-5 border-t border-gray-300 bg-gray-50 p-4 rounded-md text-xs">
           <p className="text-gray-700 font-semibold mb-2">Demoinloggningar:</p>
           <ul className="pl-5 text-gray-700 space-y-1">
-            <li className="font-mono">Email: resident1@apartment.com, PIN: 1234</li>
-            <li className="font-mono">Email: resident2@apartment.com, PIN: 5678</li>
-            <li className="font-mono">Email: resident3@apartment.com, PIN: 9012</li>
+            <li className="font-mono">Lägenhet: A10231, PIN: 1234</li>
+            <li className="font-mono">Lägenhet: A10232, PIN: 5678</li>
+            <li className="font-mono">Lägenhet: A10233, PIN: 9012</li>
           </ul>
         </div>
       </div>

@@ -2,7 +2,7 @@ import type React from "react";
 import { createContext, type ReactNode, useContext, useState } from "react";
 
 interface User {
-  email: string;
+  forename: string;
   id: string | number;
   token?: string;
   apartmentNumber: string;
@@ -10,7 +10,7 @@ interface User {
 
 interface AuthContextType {
   user: User | null;
-  login: (email: string, pin: string) => Promise<void>;
+  login: (apartmentNumber: string, pin: string) => Promise<void>;
   logout: () => void;
   isAuthenticated: boolean;
 }
@@ -20,14 +20,14 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
 
-  const login = async (email: string, pin: string) => {
+  const login = async (apartmentNumber: string, pin: string) => {
     try {
-      const response = await fetch("http://localhost:5272/api/auth/login", {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, pin }),
+        body: JSON.stringify({ apartmentNumber, pin }),
       });
 
       if (!response.ok) {
@@ -35,10 +35,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         throw new Error(errorData.message || "Login failed. Please try again.");
       }
 
-      const data: { userId: number; email: string; token: string; apartmentNumber: string } = await response.json();
+      const data: { userId: number; forename: string; token: string; apartmentNumber: string } = await response.json();
 
       setUser({
-        email: data.email,
+        forename: data.forename,
         id: data.userId,
         token: data.token,
         apartmentNumber: data.apartmentNumber,

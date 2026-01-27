@@ -20,7 +20,7 @@ export interface BookedSlotsResponse {
 }
 
 export const fetchBookedSlots = async (date: string, daysAhead: number): Promise<BookedSlotsResponse> => {
-  const response = await fetch(`http://localhost:5272/api/bookings/booked?date=${date}&daysAhead=${daysAhead}`);
+  const response = await fetch(`${import.meta.env.VITE_API_URL}/bookings/booked?date=${date}&daysAhead=${daysAhead}`);
 
   if (!response.ok) {
     throw new Error(`Failed to fetch booked slots: ${response.statusText}`);
@@ -81,7 +81,7 @@ export const bookTimeSlot = async (bookingDate: string, timeSlotNumber: number):
     throw new Error("Authentication token not found. Please log in again.");
   }
 
-  const response = await fetch("http://localhost:5272/api/bookings/book", {
+  const response = await fetch(`${import.meta.env.VITE_API_URL}/bookings/book`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -108,7 +108,7 @@ export const unbookTimeSlot = async (slotId: number): Promise<void> => {
     throw new Error("Authentication token not found. Please log in again.");
   }
 
-  const response = await fetch(`http://localhost:5272/api/bookings/unbook/${slotId}`, {
+  const response = await fetch(`${import.meta.env.VITE_API_URL}/bookings/unbook/${slotId}`, {
     method: "DELETE",
     headers: {
       Authorization: `Bearer ${token}`,

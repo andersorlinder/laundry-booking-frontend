@@ -13,7 +13,7 @@ interface TimeSlot {
 interface TimeSlotTableProps {
   sortedDates: string[];
   groupedSlots: Record<string, TimeSlot[]>;
-  user: { email: string; id: string | number; token?: string; apartmentNumber: string } | null;
+  user: { forename: string; id: string | number; token?: string; apartmentNumber: string } | null;
   userBooking: TimeSlot | undefined;
   handleBookSlot: (slotId: string) => void;
 }
@@ -66,7 +66,7 @@ const TimeSlotTable: React.FC<TimeSlotTableProps> = ({
                     return <td key={timeSlot} className="px-1 md:px-6 py-2 md:py-4 border border-gray-300"></td>;
                   }
 
-                  const isUserBooking = slot.bookedBy === user?.email;
+                  const isUserBooking = slot.bookedBy === user?.apartmentNumber;
                   const isOtherBooking = !slot.available && !isUserBooking;
                   const isDisabled = userBooking && !isUserBooking;
 

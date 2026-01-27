@@ -7,8 +7,8 @@ import { useAuth } from "../context/AuthContext";
 import {
   bookTimeSlot,
   fetchBookedSlots,
-  getBookedSlotMap,
   getBookedSlotDetails,
+  getBookedSlotMap,
   unbookTimeSlot,
 } from "../services/bookingService";
 
@@ -81,7 +81,7 @@ const BookingPage: React.FC = () => {
             return {
               ...slot,
               available: false,
-              bookedBy: isUserBooking ? user?.email : "other_user",
+              bookedBy: isUserBooking ? user?.apartmentNumber : "other_user",
               bookingId: bookedSlot?.id,
               apartmentNumber: bookedSlot?.apartmentNumber,
             };
@@ -97,16 +97,16 @@ const BookingPage: React.FC = () => {
     };
 
     fetchAndUpdateBookedSlots();
-  }, [user?.email, user?.id]);
+  }, [user?.apartmentNumber, user?.id]);
 
   // Find the user's current booking
-  const userBooking = timeSlots.find((s) => s.bookedBy === user?.email);
+  const userBooking = timeSlots.find((s) => s.bookedBy === user?.apartmentNumber);
 
   const handleBookSlot = async (slotId: string) => {
     const slot = timeSlots.find((s) => s.id === slotId);
 
     // If clicking on their own booking, unbook it
-    if (slot && slot.bookedBy === user?.email) {
+    if (slot && slot.bookedBy === user?.apartmentNumber) {
       try {
         if (!slot.bookingId) {
           throw new Error("Booking ID not found");
@@ -148,7 +148,7 @@ const BookingPage: React.FC = () => {
             ? {
                 ...s,
                 available: false,
-                bookedBy: user?.email,
+                bookedBy: user?.apartmentNumber,
                 bookingId: bookingResponse.id,
                 apartmentNumber: user?.apartmentNumber,
               }
@@ -185,8 +185,8 @@ const BookingPage: React.FC = () => {
     <div className="min-h-screen bg-gray-100">
       <header className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-4 md:px-8 py-3 md:py-5 shadow-md flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
         <div className="header-content">
-          <h1 className="text-xl md:text-3xl font-semibold mb-1">Tvättidsbooking</h1>
-          <p className="text-xs md:text-sm opacity-90 truncate">Välkommen, lägenhet {user?.apartmentNumber}</p>
+          <h1 className="text-xl md:text-3xl font-semibold mb-1">Tvättidsbokning</h1>
+          <p className="text-xs md:text-sm opacity-90 truncate">Välkommen {user?.forename}</p>
         </div>
         <button
           type="button"

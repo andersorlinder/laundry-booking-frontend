@@ -1,73 +1,120 @@
-# React + TypeScript + Vite
+# Laundry Booking System - Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern web application for managing laundry room bookings in apartment buildings. Residents can easily book and manage their laundry time slots using their apartment number and PIN.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Secure Authentication**: Login with apartment number and PIN
+- **Visual Booking Calendar**: View available time slots for the next 28 days
+- **Easy Booking Management**: Book and cancel laundry slots with a single click
+- **Real-time Availability**: See which slots are available, booked by you, or taken by others
+- **Responsive Design**: Works seamlessly on desktop, tablet, and mobile devices
+- **Swedish Localization**: Complete Swedish language interface
 
-## React Compiler
+## Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **React 18** - UI framework
+- **TypeScript** - Type safety
+- **Vite** - Fast build tool and dev server
+- **React Router** - Client-side routing
+- **Tailwind CSS** - Utility-first styling
+- **Context API** - State management
 
-## Expanding the ESLint configuration
+## Getting Started
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Prerequisites
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- Node.js (v16 or higher)
+- npm or yarn
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### Installation
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+1. Clone the repository:
+```bash
+git clone <repository-url>
+cd laundry-booking-frontend
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+2. Install dependencies:
+```bash
+npm install
 ```
+
+3. Create a `.env` file (copy from `.env.example`):
+```bash
+cp .env.example .env
+```
+
+4. Start the development server:
+```bash
+npm run dev
+```
+
+The application will be available at `http://localhost:5173`
+
+## Available Scripts
+
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build
+- `npm run lint` - Run ESLint
+
+## API Integration
+
+The application connects to the laundry booking API. Configure the API URL in your `.env` file:
+```bash
+VITE_API_URL=http://laundry-booking-api.onrender.com/api
+```
+
+### Authentication
+
+**Login Endpoint**: `POST /auth/login`
+
+Request body:
+```json
+{
+  "apartmentNumber": "A10231",
+  "pin": "1234"
+}
+```
+
+Response:
+```json
+{
+  "userId": 1,
+  "forename": "John",
+  "token": "jwt-token",
+  "apartmentNumber": "A10231"
+}
+```
+
+## Project Structure
+
+```
+src/
+├── components/          # Reusable UI components
+│   ├── LaundryRulesAccordion.tsx
+│   ├── ProtectedRoute.tsx
+│   └── TimeSlotTable.tsx
+├── context/            # React Context providers
+│   └── AuthContext.tsx
+├── pages/              # Page components
+│   ├── BookingPage.tsx
+│   └── LoginPage.tsx
+├── services/           # API services
+│   └── bookingService.ts
+├── App.tsx             # Main app component
+└── main.tsx           # Entry point
+```
+
+## Demo Credentials
+
+For testing purposes, use any of these credentials:
+
+- **Lägenhet**: A10231, **PIN**: 1234
+- **Lägenhet**: A10232, **PIN**: 5678
+- **Lägenhet**: A10233, **PIN**: 9012
+
+## License
+
+This project is private and proprietary.
