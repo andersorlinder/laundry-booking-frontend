@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import type React from "react";
+import { useState } from "react";
 
 const LaundryRulesAccordion: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -28,6 +29,7 @@ const LaundryRulesAccordion: React.FC = () => {
         <div className="px-4 md:px-6 py-4 md:py-5">
           <ul className="space-y-3">
             {rules.map((rule, index) => (
+              // biome-ignore lint/suspicious/noArrayIndexKey: <Order is not significant here>
               <li key={index} className="flex gap-3 text-xs md:text-sm text-gray-700">
                 <span className="text-indigo-600 font-semibold flex-shrink-0">•</span>
                 <span>{rule}</span>

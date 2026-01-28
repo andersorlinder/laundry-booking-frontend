@@ -42,7 +42,6 @@ const LoginPage: React.FC = () => {
               type="text"
               value={apartmentNumber}
               onChange={(e) => setApartmentNumber(e.target.value)}
-              placeholder="A10231"
               required
               disabled={isLoading}
               className="w-full px-3 py-3 border-2 border-gray-300 rounded-md text-sm transition-colors focus:outline-none focus:border-indigo-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
@@ -58,8 +57,6 @@ const LoginPage: React.FC = () => {
               type="password"
               value={pin}
               onChange={(e) => setPin(e.target.value)}
-              placeholder="Ange din 4-siffriga PIN-kod"
-              maxLength={4}
               required
               disabled={isLoading}
               className="w-full px-3 py-3 border-2 border-gray-300 rounded-md text-sm transition-colors focus:outline-none focus:border-indigo-500 disabled:bg-gray-100 disabled:cursor-not-allowed"

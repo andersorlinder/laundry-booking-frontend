@@ -8,6 +8,7 @@ interface TimeSlot {
   available: boolean;
   bookedBy?: string;
   apartmentNumber?: string;
+  started?: boolean;
 }
 
 interface TimeSlotTableProps {
@@ -68,7 +69,8 @@ const TimeSlotTable: React.FC<TimeSlotTableProps> = ({
 
                   const isUserBooking = slot.bookedBy === user?.apartmentNumber;
                   const isOtherBooking = !slot.available && !isUserBooking;
-                  const isDisabled = userBooking && !isUserBooking;
+                  const isStarted = slot.started === true;
+                  const isDisabled = (userBooking && !isUserBooking) || isStarted;
 
                   return (
                     <td key={slot.id} className="px-1 md:px-6 py-2 md:py-4 border border-gray-300">
@@ -76,26 +78,27 @@ const TimeSlotTable: React.FC<TimeSlotTableProps> = ({
                         type="button"
                         onClick={() => handleBookSlot(slot.id)}
                         disabled={isDisabled}
-                        title={
-                          isUserBooking
-                            ? "Klicka för att avboka"
-                            : isOtherBooking
-                              ? `Bokad av lägenhet ${slot.apartmentNumber}`
-                              : userBooking
-                                ? "Du har redan en bokning. Avboka den för att boka en annan."
-                                : "Klicka för att boka"
-                        }
                         className={`w-full px-2 md:px-4 py-2 md:py-3 rounded-md text-xs md:text-sm font-medium transition-all ${
-                          isUserBooking
-                            ? "border-2 border-blue-500 bg-blue-100 text-blue-900 cursor-pointer hover:bg-blue-200"
-                            : isOtherBooking
-                              ? "border-2 border-red-400 bg-red-50 text-red-800 cursor-not-allowed opacity-70"
-                              : userBooking
-                                ? "border-2 border-gray-300 bg-gray-50 text-gray-600 cursor-not-allowed opacity-50"
-                                : "border-2 border-green-400 bg-green-50 text-green-800 hover:border-indigo-500 hover:bg-blue-50 cursor-pointer"
+                          isStarted
+                            ? "border-2 border-gray-300 bg-gray-200 text-gray-500 cursor-not-allowed opacity-60"
+                            : isUserBooking
+                              ? "border-2 border-blue-500 bg-blue-100 text-blue-900 cursor-pointer hover:bg-blue-200"
+                              : isOtherBooking
+                                ? "border-2 border-red-400 bg-red-50 text-red-800 cursor-not-allowed opacity-70"
+                                : userBooking
+                                  ? "border-2 border-gray-300 bg-gray-50 text-gray-600 cursor-not-allowed opacity-50"
+                                  : "border-2 border-green-400 bg-green-50 text-green-800 hover:border-indigo-500 hover:bg-blue-50 cursor-pointer"
                         }`}
                       >
-                        {isUserBooking ? "✓ Din bokning" : isOtherBooking ? `Lgh ${slot.apartmentNumber}` : "Ledig"}
+                        {isStarted && isUserBooking
+                          ? "Pågår"
+                          : isStarted
+                            ? "Startat"
+                            : isUserBooking
+                              ? "✓ Din bokning"
+                              : isOtherBooking
+                                ? `Lgh ${slot.apartmentNumber}`
+                                : "Ledig"}
                       </button>
                     </td>
                   );

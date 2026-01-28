@@ -21,6 +21,7 @@ interface TimeSlot {
   bookedBy?: string;
   bookingId?: number; // The actual booking ID from the database
   apartmentNumber?: string;
+  started?: boolean; // Whether the time slot has already started
 }
 
 // Generate 28 days of time slots starting from today
@@ -74,6 +75,19 @@ const BookingPage: React.FC = () => {
         const updatedSlots = generateTimeSlots().map((slot) => {
           const timeSlotNumber = ["07:00 - 12:00", "12:00 - 17:00", "17:00 - 22:00"].indexOf(slot.time) + 1;
 
+          // Check if the time slot has started
+          const slotDateTime = new Date(slot.date);
+          const timeSlotIndex = ["07:00 - 12:00", "12:00 - 17:00", "17:00 - 22:00"].indexOf(slot.time);
+          if (timeSlotIndex === 0) {
+            slotDateTime.setHours(7, 0, 0, 0);
+          } else if (timeSlotIndex === 1) {
+            slotDateTime.setHours(12, 0, 0, 0);
+          } else if (timeSlotIndex === 2) {
+            slotDateTime.setHours(17, 0, 0, 0);
+          }
+          const now = new Date();
+          const hasStarted = now >= slotDateTime;
+
           if (bookedMap.has(slot.date) && bookedMap.get(slot.date)?.has(timeSlotNumber)) {
             const bookedSlot = bookedDetails.get(slot.date)?.get(timeSlotNumber);
             const isUserBooking = bookedSlot?.userId === user?.id;
@@ -84,10 +98,14 @@ const BookingPage: React.FC = () => {
               bookedBy: isUserBooking ? user?.apartmentNumber : "other_user",
               bookingId: bookedSlot?.id,
               apartmentNumber: bookedSlot?.apartmentNumber,
+              started: hasStarted,
             };
           }
 
-          return slot;
+          return {
+            ...slot,
+            started: hasStarted,
+          };
         });
 
         setTimeSlots(updatedSlots);
@@ -101,17 +119,17 @@ const BookingPage: React.FC = () => {
 
   // Find all the user's bookings
   const userBookings = timeSlots.filter((s) => s.bookedBy === user?.apartmentNumber);
-  
+
   // Find the most relevant booking (prioritize future bookings)
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-  
+
   const futureBookings = userBookings.filter((booking) => {
     const bookingDate = new Date(booking.date);
     bookingDate.setHours(0, 0, 0, 0);
     return bookingDate > today;
   });
-  
+
   const userBooking = futureBookings.length > 0 ? futureBookings[0] : userBookings[0];
   const hasFutureBooking = futureBookings.length > 0;
 
@@ -168,7 +186,7 @@ const BookingPage: React.FC = () => {
         alert("Du har redan en framtida bokning. Avboka den först för att boka en ny tid.");
         return;
       }
-      
+
       // User has booking(s) from today or earlier, allow booking from tomorrow onwards
       const slotDate = new Date(slot?.date || "");
       slotDate.setHours(0, 0, 0, 0);
