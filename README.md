@@ -4,12 +4,18 @@ A modern web application for managing laundry room bookings in apartment buildin
 
 ## Features
 
+### Existing
+
 - **Secure Authentication**: Login with apartment number and PIN
 - **Visual Booking Calendar**: View available time slots for the next 28 days
 - **Easy Booking Management**: Book and cancel laundry slots with a single click
 - **Real-time Availability**: See which slots are available, booked by you, or taken by others
 - **Responsive Design**: Works seamlessly on desktop, tablet, and mobile devices
 - **Swedish Localization**: Complete Swedish language interface
+
+### Coming
+
+- **Reminder through emails**
 
 ## Tech Stack
 
